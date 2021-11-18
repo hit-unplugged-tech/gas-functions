@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "devDependencies": {
+    "@types/google-apps-script": "^1.0.41"
+  }
+}

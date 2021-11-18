@@ -1,0 +1,43 @@
+name: gas-setup
+
+on:
+  push:
+    branches: master
+
+jobs:
+  setup-trigger:
+    runs-on: ubuntu-latest
+
+    env:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      ID_TOKEN: ${{ secrets.ID_TOKEN }}
+      REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      SCRIPT_ID: ${{ secrets.SCRIPT_ID }}
+      DEPLOYMENT_ID: ${{ secrets.DEPLOYMENT_ID }}
+
+      steps:
+        - name: checkout
+          uses: actions/checkout@v2
+          with:
+            ref: master
+
+        - name: setup node 16.x
+          uses: actions/setup-node@v2
+          with:
+            node-version: "16.x"
+
+        - name: install clasp
+          run: yarn global add @google/clasp
+
+        - name: setup json file
+          run: bash setup/clasp.json.sh && bash setup/clasprc.json.sh
+
+        - name: deploy
+          run: |
+            clasp push --force && clasp deploy -i $DEPLOYMENT_ID
+
+        - name: setup trigger
+          run: |
+            curl -L https://script.google.com/macros/s/"$DEPLOYMENT_ID"/exec | jq
