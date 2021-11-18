@@ -17,27 +17,27 @@ jobs:
       SCRIPT_ID: ${{ secrets.SCRIPT_ID }}
       DEPLOYMENT_ID: ${{ secrets.DEPLOYMENT_ID }}
 
-      steps:
-        - name: checkout
-          uses: actions/checkout@v2
-          with:
-            ref: master
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
 
-        - name: setup node 16.x
-          uses: actions/setup-node@v2
-          with:
-            node-version: "16.x"
+      - name: setup node 16.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16.x"
 
-        - name: install clasp
-          run: yarn global add @google/clasp
+      - name: install clasp
+        run: yarn global add @google/clasp
 
-        - name: setup json file
-          run: bash setup/clasp.json.sh && bash setup/clasprc.json.sh
+      - name: setup json file
+        run: bash setup/clasp.json.sh && bash setup/clasprc.json.sh
 
-        - name: deploy
-          run: |
-            clasp push --force && clasp deploy -i $DEPLOYMENT_ID
+      - name: deploy
+        run: |
+          clasp push --force && clasp deploy -i $DEPLOYMENT_ID
 
-        - name: setup trigger
-          run: |
-            curl -L https://script.google.com/macros/s/"$DEPLOYMENT_ID"/exec | jq
+      - name: setup trigger
+        run: |
+          curl -L https://script.google.com/macros/s/"$DEPLOYMENT_ID"/exec | jq
