@@ -22,12 +22,25 @@ const SLACK_BOT_TOKEN = props.SLACK_BOT_TOKEN
 const SLACK_FORM_CHANNEL = props.SLACK_FORM_CHANNEL
 
 const setTrigger = (): number => {
-  const max_n_trigger = MAX_N_TRIGGER
+  const max_n_trigger = MAX_N_TRIGGER - 1
   let n_trigger = 0
   deleteAllTrigger()
   n_trigger += setFormTrigger(max_n_trigger)
 
+  ScriptApp.newTrigger(resetTrigger.name)
+    .timeBased()
+    .after(24 * 60 * 60 * 1000)
+    .create()
+  n_trigger += 1
+
   return n_trigger
+}
+
+const resetTrigger = () => {
+  const max_n_trigger = MAX_N_TRIGGER
+  let n_trigger = 0
+  deleteAllTrigger()
+  n_trigger += setFormTrigger(max_n_trigger)
 }
 
 const deleteAllTrigger = () => {
