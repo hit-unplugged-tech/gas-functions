@@ -77,7 +77,7 @@ const getAllFormIdList = (folderId: string): string[] => {
 }
 
 const getAllFileIdByType = (targetFolder: GoogleAppsScript.Drive.Folder, fileType: string): string[] => {
-  const fileIdList: string[] = []
+  let fileIdList: string[] = []
 
   const files = targetFolder.getFilesByType(fileType)
   while (files.hasNext()) {
@@ -88,7 +88,7 @@ const getAllFileIdByType = (targetFolder: GoogleAppsScript.Drive.Folder, fileTyp
   const folders = targetFolder.getFolders()
   while (folders.hasNext()) {
     const folder = folders.next()
-    fileIdList.concat(getAllFileIdByType(folder, fileType))
+    fileIdList = fileIdList.concat(getAllFileIdByType(folder, fileType))
   }
 
   return fileIdList
